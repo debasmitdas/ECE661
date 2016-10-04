@@ -13,7 +13,7 @@ def imgSIFT(path):
     gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 
     #PeakThreshold=3
-    SIFT = cv2.xfeatures2d.SIFT_create(nfeatures=1000,nOctaveLayers=4,contrastThreshold=0.12,edgeThreshold=10,sigma=1.6)
+    SIFT = cv2.xfeatures2d.SIFT_create(nfeatures=1000,nOctaveLayers=4,contrastThreshold=0.12,edgeThreshold=10,sigma=5)
     dummy = np.zeros((1,1))
     kp, des = SIFT.detectAndCompute(gray,None) #This returns the keypoint pixels and their descriptors
     img = cv2.drawKeypoints(img, kp,dummy, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
@@ -119,10 +119,10 @@ def NCCimg(l,ncc,tncc):
 
 
 if __name__ == "__main__":
-    l1=imgSIFT('pair2/1.jpg')
-    l2=imgSIFT('pair2/2.jpg')
+    l1=imgSIFT('pair1/1.jpg')
+    l2=imgSIFT('pair1/2.jpg')
     l=[l1,l2]
-    img1=NCCimg(l,0.7,0.9)
-    img2=SSDimg(l,0.7,5)
+    img1=NCCimg(l,0.9,0.9)
+    img2=SSDimg(l,0.4,5)
     cv2.imwrite('sift_results/SIFTResultNCC.jpg',img1)
     cv2.imwrite('sift_results/SIFTResultSSD.jpg',img2)    

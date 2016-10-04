@@ -99,7 +99,7 @@ def SSD(C1,C2,img1,img2,W,ssd,tssd):
 				loc_min=ssdmat[i,j]
 				ssdmat[i,j]=np.max(ssdmat[i,:])
 				if loc_min/np.min(ssdmat[i,:])<ssd:
-					
+					ssdmat[:,j]=np.max(ssdmat)
 					ssdmat[i,j]=loc_min					
 					if fl==0:
 						pts.append([src[i,0],src[i,1],dest[j,0],dest[j,1]])
@@ -150,7 +150,7 @@ def NCC(C1,C2,img1,img2,W,ncc,tncc):
 				loc_max=nccmat[i,j]
 				nccmat[i,j]=np.min(nccmat[i,:])
 				if loc_max/np.max(nccmat[i,:])>ncc:
-					
+					nccmat[:,j]=np.min(nccmat)
 					nccmat[i,j]=loc_max					
 					if fl==0:
 						pts.append([src[i,0],src[i,1],dest[j,0],dest[j,1]])
@@ -163,29 +163,29 @@ def NCC(C1,C2,img1,img2,W,ncc,tncc):
 if __name__ == "__main__":
 
     
-    img1=cv2.imread("pair2/1.jpg")
-    img2=cv2.imread("pair2/2.jpg")
-    levels=1
-    sigma=1.2
+    img1=cv2.imread("pair1/1.jpg")
+    img2=cv2.imread("pair1/2.jpg")
+    level=1
+    sigma=1.4
     W=24
-    k=0.04
-    ncc=0.8
-    tncc=0.6
-    ssd=0.7
-    tssd=6
+    k=0.06
+    ncc=0.9
+    tncc=0.7
+    ssd=0.8
+    tssd=5
 
     img1gray=cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
     img2gray=cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
     
-    C1 = harris(img1gray,sigma,levels,k,0.3)
-    C2 = harris(img2gray,sigma,levels,k,0.3)
+    C1 = harris(img1gray,sigma,level,k,0.3)
+    C2 = harris(img2gray,sigma,level,k,0.3)
     
     # Obtaining matches using NCC metrics
     Cord = NCC(C1,C2,img1gray,img2gray,W,ncc,tncc)
-    cv2.imwrite('HarrisNCC.jpg',plotimg(Cord,img1,img2))
+    cv2.imwrite('harris_results/HarrisNCCl1.jpg',plotimg(Cord,img1,img2))
     
     
     # Obtaining matches using SSD metrics
     Cord = SSD(C1,C2,img1gray,img2gray,W,ssd,tssd)
-    cv2.imwrite('HarrisSSD.jpg',plotimg(Cord,img1,img2))
+    cv2.imwrite('harris_results/HarrisSSDl1.jpg',plotimg(Cord,img1,img2))
     
