@@ -5,6 +5,8 @@ Created on Sat Oct  1 15:16:21 2016
 @author: debasmit
 """
 
+#Code for harris detector
+
 
 import cv2
 import numpy as np

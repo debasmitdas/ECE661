@@ -4,6 +4,9 @@ Created on Fri Sep 23 20:13:30 2016
 
 @author: debasmit
 """
+
+#Code for SIFT
+
 import cv2
 import numpy as np
 
