@@ -4,7 +4,6 @@ Created on Thu Oct 20 17:46:23 2016
 
 @author: debasmit
 """
-#Change the calculation of the number of pixels in otsu_gray()
 
 import numpy as np
 import cv2
@@ -14,7 +13,7 @@ import cv2
 
 #Applying OTSU's algorithm for RGB images
 def otsuRGB(img, maskinvert, iterations):
-    #Haha
+    #Mask invert is just for inverting and non-inverting channels 
     output=np.zeros((img.shape[0],img.shape[1]),np.uint8)
     output.fill(255)
     
@@ -24,7 +23,7 @@ def otsuRGB(img, maskinvert, iterations):
         #The mask of channel c
         mask=None        
         
-        #Applying Otsu's algorithm to each channel
+        #Applying Otsu's algorithm to each channel for a number of iterations
         for i in xrange(iterations[c]):
             mask=otsuGray(img[:,:,c],mask)
         
@@ -154,7 +153,7 @@ def contourExtract(img):
 
 if __name__ == "__main__":
     
-    img=cv2.imread('brain.jpg')
+    img=cv2.imread('lake.jpg')
     
     texture=0; #Flag to select whether we use texture based image segmentation
     
@@ -164,23 +163,27 @@ if __name__ == "__main__":
         outputi=textureImage(img)
         output=otsuRGB(outputi,[1,1,1],[1,1,1])
     
-    cv2.imwrite('brain_segment_withnoise.jpg', output)
-    #Steps to remove noise from background
-#    kern=np.ones((17,17),np.uint8)
-#    output=cv2.erode(output,kern)
-#    output=cv2.dilate(output,kern)
+    cv2.imwrite('lake_segment_withnoise.jpg', output)
     
     #Steps to remove noise in the foreground
-    kern=np.ones((5,5),np.uint8)
+    kern=np.ones((7,7),np.uint8)
     output=cv2.dilate(output,kern)
-    output=cv2.erode(output,kern)
+    output=cv2.erode(output,kern)   
     
-    cv2.imwrite('brain_segment_withoutnoise.jpg', output)
+    
+    #Steps to remove noise from background
+    kern=np.ones((13,13),np.uint8)
+    output=cv2.erode(output,kern)
+    output=cv2.dilate(output,kern)    
+    
+    
+    
+    cv2.imwrite('lake_segment_withoutnoise.jpg', output)
     
     #Extracting the contour
     outputcontour=contourExtract(output)
     
-    cv2.imwrite('brain_contour.jpg', outputcontour)
+    cv2.imwrite('lake_contour.jpg', outputcontour)
     
     
     
