@@ -1,19 +1,15 @@
 function pout=minIntVal(pin,P)
-pin=pin';
-min=2^P-1;
+A=size(P,1);
 minshift=P+1;
-for i=0:P-1
+for i=1:P
+    %Looking over all circular shifts
+    Y=circshift(pin,i);
     
-    Y=circshift(pin',i);
-    if(bi2de(Y')<min)
-        min=bi2de(Y');
-        minshift=i;
-    end
+    A(i)=bi2de(Y','left-msb');
 end
+[~,minshift]=min(A); % Finding the index of the one with minIntVal
 
-pout=flipud(circshift(pin',minshift));
-
-
-    
+pout=circshift(pin,minshift);
+end    
     
 
