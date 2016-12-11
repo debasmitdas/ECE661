@@ -8,7 +8,7 @@ Ntrials=21;
 trPath = 'Face/train/';
 tePath = 'Face/test/';
 % load training images
-[trainImg, ~, ~] = loadImg(trPath, Npers, Ntrials);
+[trainImg, ~, ~] = loadImg(trPath, Npers, Ntrials);  
 % load testing images
 [testImg, ~, ~] = loadImg(tePath, Npers, Ntrials);
 % load trained w
@@ -38,11 +38,11 @@ partEig=w(:,1:i);
 
 TrainDataX=trainProj';
 TestDataX=testProj';
-%Training a K-Nearest neighbour
-mdl=fitcknn(TrainDataX, TrainDataY, 'NumNeighbors',10, 'distance', 'euclidean');
+%Training a K-Nearest neighbour K=1
+mdl=fitcknn(TrainDataX, TrainDataY, 'NumNeighbors',1, 'distance', 'euclidean');
 TestDataPred=mdl.predict(TestDataX);
 
-%Testing using k-nearest neighbour and calculating accuracy
+%Testing using nearest neighbour and calculating accuracy
 Diff=TestDataPred-TrainDataY;
 accPCA(1,i)=nnz(~Diff);    
 

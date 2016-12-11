@@ -1,5 +1,4 @@
 % This is the main method for LDA
-
 %Number of persons or the no. of classes
 Npers=30;
 %Number of trials per person
@@ -47,11 +46,11 @@ for i = 1:Neig
 
 TrainDataX=trainProj';
 TestDataX=testProj';
-%Training a K-Nearest neighbour
-mdl=fitcknn(TrainDataX, TrainDataY, 'NumNeighbors',10, 'distance', 'euclidean');
+%Training a Nearest neighbour
+mdl=fitcknn(TrainDataX, TrainDataY, 'NumNeighbors',1, 'distance', 'euclidean');
 TestDataPred=mdl.predict(TestDataX);
 
-%Testing using k-nearest neighbour and calculating accuracy
+%Testing using nearest neighbour and calculating accuracy
 Diff=TestDataPred-TrainDataY;
 accLDA(1,i)=nnz(~Diff);    
 

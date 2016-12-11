@@ -1,0 +1,75 @@
+% This is the script for testing 
+clc
+clear all
+
+% Obtaining Test features 
+testFeatureFile = load('features_adaboost_test.mat');
+testFeatures = testFeatureFile.features_adaboost.features;
+Npos = testFeatureFile.features_adaboost.Npos;
+Nneg = testFeatureFile.features_adaboost.Nneg;
+S = 10; % This is the no. of stages
+% for computing accuracy for each stage
+fp = zeros(S,1);
+fn = zeros(S,1);
+% test for each stage
+for i = 1:S
+ % load classifier infor
+ htFile = load(['ht_' num2str(i) '.mat']);
+ ht = htFile.ht;
+ alphaFile = load(['alpha_' num2str(i) '.mat']);
+ alpha = alphaFile.alpha;
+ strongThFile = load(['threshold_' num2str(i) '.mat']);
+ strongTh = strongThFile.threshold;
+
+ % get t for each stage that is the no. of classifiers for each stage 
+ t = 0;
+ for j = 1:size(ht,2)
+ if ht(:,j)==0
+ break;
+ end
+ t = t + 1;
+ end
+
+ % build polarity
+ p = ht(2,1:t);
+ % build each weak classifier threshold
+ theta = ht(4,1:t);
+ % build selected features
+ fIdx = ht(3,1:t);
+ % build alpha
+ alpha = alpha(1:t,1);
+
+ % do classification
+ result = adaBoostClassify(testFeatures, alpha, p, theta, fIdx, t);
+
+ % compute false postive rate and false negative rate
+ fn(i) = (Npos - sum(result(1:Npos))) / Npos;
+ fp(i) = sum(result(Npos+1:end)) / Nneg;
+end
+
+%This is for checking cumulative FPR and TPR for cascaded stage. 
+noStage = 10;
+fp_rate = zeros(noStage,1);
+for i=1:noStage
+ fp_rate = fp(1:i);
+ for j=2:i
+ if fp_rate(j)==0
+ fp_rate(j)=fp_rate(j-1);
+ break;
+ end
+ end
+ falsepos_acc = cumprod(fp_rate);
+end
+fn_rate = zeros(noStage,1);
+for i=1:noStage
+ fn_rate = fn(1:i);
+ for j=2:i
+ if fn_rate(j)==0
+ fn_rate(j)=fn_rate(j-1);
+ break;
+ end
+ end
+end
+falseneg_acc=(1-cumprod(1-fn_rate));
+% Plot the accumulated FNR and FPR after that
+

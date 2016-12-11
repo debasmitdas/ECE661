@@ -4,7 +4,7 @@ function [normW, Neig]= myPCA(imgVec)
 % Compute covariance matrix for sorting eigen values
 [V,D]= eig(imgVec'*imgVec);
 eigV = diag(D);
-[~,idx] = sort(-1.0 .* eigV);
+[~,idx] = sort(-1.0 .* eigV); % Thos is done for sorting
 eigV = eigV(idx);
 V = V(:,idx);
 
